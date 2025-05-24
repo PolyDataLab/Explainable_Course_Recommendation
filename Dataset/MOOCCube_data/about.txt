@@ -1,0 +1,1 @@
+This folder contains a link to download mooccube dataset, train and test data, and preprocessed course information.
