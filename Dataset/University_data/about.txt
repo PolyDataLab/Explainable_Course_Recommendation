@@ -1,0 +1,14 @@
+This folder contains information about course enrollment data collected from university. 
+
+Unfortunately, we can not share University data due to the privacy issue of the students. 
+The dataset is similar to provided MOOC dataset with some exceptions. 
+
+Sample dataset:
+userID  courseID   semester_info  grade     course_name     course_description  
+1        "XXX"     "Spring20xx"     "B+"         "XXX"          "XXX"
+1        "XXX"     "Summer20xx"     "A"          "XXX"          "XXX"
+1        "XXX"     "Fall20xx"       "A-"         "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "A"          "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "A-"         "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "B+"         "XXX"          "XXX"
+...
