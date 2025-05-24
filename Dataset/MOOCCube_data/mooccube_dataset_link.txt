@@ -1,0 +1,2 @@
+MOOCCube dataset and corresponding descriptions can be found in this link: http://moocdata.cn/data/MOOCCube#MOOCCube.
+This dataset is collected from XuetangX which is a popular MOOC platform in China. 
