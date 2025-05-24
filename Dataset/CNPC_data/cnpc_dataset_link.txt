@@ -1,0 +1,2 @@
+The Canvas Network Person-Course (CNPC) open dataset is available in this link: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/1XORAL&version=2.0.
+Canvas Network is a US-based global platform that offers diferent open courses of different disciplines.
