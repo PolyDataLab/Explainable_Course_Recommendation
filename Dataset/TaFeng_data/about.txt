@@ -1,0 +1,1 @@
+This dataset is publicly available at: https://www.kaggle.com/chiranjivdas09/ta-feng-grocery-dataset
