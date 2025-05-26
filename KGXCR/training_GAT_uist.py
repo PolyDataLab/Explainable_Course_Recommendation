@@ -28,6 +28,23 @@ import scipy.sparse as sp
 from torch_geometric.utils import from_scipy_sparse_matrix
 from torch_geometric.nn import GATConv
 
+# course - course sequence matrix
+def measure_sequence_of_courses(data, reversed_item_dict):
+    num_items = len(reversed_item_dict)
+    seq_matrix = np.zeros((num_items, num_items))
+    for baskets in data['baskets']:
+        for index1 in range(0, len(baskets)-1):
+            for index2 in range(index1+1, len(baskets)):
+                list1= baskets[index1]
+                list2= baskets[index2]
+                for item1 in list1:
+                    for item2 in list2:
+                        #sequence_dict[item1, item2]= sequence_dict.get((item1, item2),0)+ 1 
+                        seq_matrix[reversed_item_dict[item1]][reversed_item_dict[item2]] += 1
+    seq_matrix = normalize(seq_matrix, norm='l2') 
+    return seq_matrix
+
+
 def compute_tfidf_pmi(documents, window_size=10):
     """
     Computes the adjacency matrix A combining TF-IDF and PMI.
@@ -335,7 +352,7 @@ class GAT(torch.nn.Module):
         return -torch.mean(F.logsigmoid(pos_scores - neg_scores))
 
 
-def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, one_hot_encoded_text, n_layers, embedding_dim, n_epochs, l_rate, edge_dropout, node_dropout, heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, seed_value, version):
+def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, one_hot_encoded_text, cc_seq_matrix, n_layers, embedding_dim, n_epochs, l_rate, edge_dropout, node_dropout, heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version):
     # Step 1: Data Preparation (Assume a small dataset)
     num_users = one_hot_encoded_train.shape[0]
     num_items = one_hot_encoded_train.shape[1]
@@ -344,6 +361,9 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
     num_text_f = one_hot_encoded_text.shape[1]
     # num_fet = one_hot_encoded_cat.shape[1] + one_hot_encoded_level.shape[1]
     num_fet = num_cat_f + num_level_f + num_text_f
+
+     #item item sequential edges
+    
 
     interaction_matrix = np.array(one_hot_encoded_train)
     adj_matrix_all = np.zeros((num_items+num_users+num_fet, num_items+num_users+num_fet))
@@ -359,7 +379,17 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
                  adj_matrix_all[item, num_items + user] = 1
                  #adj_matrix_all[num_items + user, item] = 1
     cnt1= 0
-   
+    interaction_matrix_cc = np.array(cc_seq_matrix)
+    for item1 in range(num_items):
+        for item2 in range(num_items):
+            if interaction_matrix_cc[item1, item2] >= threshold_weight_edges_cc: # threshold, th = 0.1
+                 cnt1+= 1
+                 cnt4+= 1
+                # edge_index.append([user, num_users + item])  # User connected to Item
+                 edge_index.append([item1, item2]) 
+                 adj_matrix_all[item1, item2] = interaction_matrix_cc[item1, item2]
+    print("num of item-item seq edges: ", cnt1)
+    
     interaction_matrix_cat = np.array(one_hot_encoded_cat)
     for item in range(num_items):
         for cat in range(num_cat_f):
@@ -526,6 +556,10 @@ if __name__ == '__main__':
     threshold_weight_edges_iw = 0.1
     threshold_weight_edges_ww = 0.1
 
+    cc_seq_matrix = measure_sequence_of_courses(dataTotal, reversed_item_dict_one_hot)  # course to id
+    print(cc_seq_matrix.shape)
+    threshold_weight_edges_cc= 0.2
+
     n_layers = 3
     embedding_dim = 128
     epochs = 200
@@ -536,6 +570,6 @@ if __name__ == '__main__':
     version = 1
     seed_value = 42
     
-    model, data, final_x, final_attention_weights_all_layers, final_edge_index_all_layers, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, n_layers, embedding_dim, epochs, lr, edge_dropout, node_dropout, n_heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, seed_value, version)
+    model, data, final_x, final_attention_weights_all_layers, final_edge_index_all_layers, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_layers, embedding_dim, epochs, lr, edge_dropout, node_dropout, n_heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version)
     end = time.time()
     print("time: ", end-start)
