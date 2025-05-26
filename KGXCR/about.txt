@@ -9,3 +9,7 @@ training_GAT_uist.py --> Define GAT class and run the GAT module to get the node
 utils.py --> some utility function to do post-processing.
 offered_courses_v2.py --> Create an offered course list for each semester from all the data. 
 train_test_uist_explainable_KGXCR.py --> main function to run all the codes and get recommendation results and generate 3 types of explanations. 
+
+best configuration of hyperparameters:
+for GAT module: number of GAT layers = 1, embedding dimension = 128, number of epochs = 400, learning rate = 0.001, number of heads = 4, edge dropout = 0, node = dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1, threshold_weight_edges_cc (course-course) = 0.1
+For GRU module: number of GRU layers = 3, dropout = 0.5, learning rate = 0.01. 
