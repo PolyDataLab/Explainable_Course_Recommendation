@@ -559,6 +559,22 @@ def get_adj_matrix_text_v3(data, reversed_item_dict_one_hot, window_s):
     return adj_matrix, vocab_size, vocab_dict_idx_to_wrd, vocab_dict_wrd_to_idx
 
 
+def measure_sequence_of_courses(data, reversed_item_dict):
+    num_items = len(reversed_item_dict)
+    seq_matrix = np.zeros((num_items, num_items))
+    for baskets in data['baskets']:
+        for index1 in range(0, len(baskets)-1):
+            for index2 in range(index1+1, len(baskets)):
+                list1= baskets[index1]
+                list2= baskets[index2]
+                for item1 in list1:
+                    for item2 in list2:
+                        #sequence_dict[item1, item2]= sequence_dict.get((item1, item2),0)+ 1 
+                        seq_matrix[reversed_item_dict[item1]][reversed_item_dict[item2]] += 1
+
+    seq_matrix = normalize(seq_matrix, norm='l2') 
+    return seq_matrix
+
 def update_idx_of_item_embedding(one_hot_encoded_data, num_users_train, item_embeddings, item_dict_idx_to_cid, item_dict_cid_to_idx, item_dict_one_hot):
     # num_nodes = data.x.size(0)
     
@@ -1308,6 +1324,9 @@ if __name__ == '__main__':
     #print(adj_matrix_text)
     threshold_weight_edges_iw = 0.1
     threshold_weight_edges_ww = 0.1
+    cc_seq_matrix = measure_sequence_of_courses(dataTotal, reversed_item_dict_one_hot)  # course to id
+    print(cc_seq_matrix.shape)
+    threshold_weight_edges_cc= 0.2
     
     n_layers = [1,2,3,4]
     embedding_dim = [32, 64, 128]
@@ -1354,7 +1373,7 @@ if __name__ == '__main__':
                                     print(f"No saved model found at {full_path}. Training from scratch.")
                                     # model, data10, final_x, final_attn_weights, final_edge_index, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, n_hds, threshold_weight_edges_iw, threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, cnt4)
                                     # item_embeddings = final_x[:num_items]
-                                    model, data10, final_x, final_attn_weights, final_edge_index, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, n_hds, threshold_weight_edges_iw, threshold_weight_edges_ww, seed_value, cnt4)
+                                    model, data10, final_x, final_attn_weights, final_edge_index, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, n_hds, threshold_weight_edges_iw, threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, cnt4)
                                     item_embeddings = final_x[:num_items]
                                 cnt4 += 1
                                 #device = torch.device("cpu")
@@ -1854,6 +1873,6 @@ if __name__ == '__main__':
                                             all_results.append(row1)
                                             all_results_df = pd.DataFrame(all_results, columns=['n_sample', 'n_layers', 'emb_dim', 'n_epochs', 'learning_rate', 'n_heads', 'edge_dropout', 'node_dropout', 'threshold_weight_edges_iw', 'rnn_layer_number', 'rnn_dropout', 'rnn_l_rate', 'train_recall', 'valid_recall', 'test_recall', 'percentage_of_at_least_one_cor_pred', 'percentage_of_at_least_two_cor_pred', 'test_recall_perturbed', 'fidelity_plus_recall', 'original_recall', 'perturbed_recall', 'per_inst_changed_rec', 'fidelity_ranking_explained_item', 'avg_rank_original', 'avg_rank_perturbed', 'ndcg_original_explained_item', 'ndcg_perturbed_explained_item', 'ndcg_original_all_rec_items', 'ndcg_perturbed_all_rec_items', 'test_recall_perturbed_sim', 'fidelity_plus_sim', 'original_recall_sim', 'perturbed_recall_sim', 'per_inst_changed_rec_sim', 'fidelity_rank_sim', 'avg_rank_org_sim', 'avg_rank_per_sim', 'ndcg_original_explained_item_sim', 'ndcg_perturbed_explained_item_sim', 'ndcg_original_all_rec_items_sim', 'ndcg_perturbed_all_rec_items_sim', 'test_recall_perturbed_col', 'fidelity_plus_col', 'original_recall_col', 'perturbed_recall_col', 'per_inst_changed_rec_col', 'fidelity_rank_col', 'avg_rank_org_col', 'avg_rank_per_col', 'ndcg_original_explained_item_col', 'ndcg_perturbed_explained_item_col', 'ndcg_original_all_rec_items_col', 'ndcg_perturbed_all_rec_items_col', 'cnt_same_items_removed_cfeat_path_sim'])
                                             
-                                            all_results_df.to_json('./all_results_df_LLM_GAT_GRU_uist_keywords_tfidf_ckw_explain_50_sample9_v1_last_semester_items.json', orient='records', lines=True) 
-                                            all_results_df.to_csv('./all_results_df_LLM_GAT_GRU_uist_keywords_tfidf_ckw_explain_50_sample9_v1_last_semester_items.csv') 
+                                            all_results_df.to_json('./all_results_df_LLM_GAT_GRU_uist_ii_seq_keywords_tfidf_ckw_explain_50_sample9_v1_last_semester_items.json', orient='records', lines=True) 
+                                            all_results_df.to_csv('./all_results_df_LLM_GAT_GRU_uist_ii_seq_keywords_tfidf_ckw_explain_50_sample9_v1_last_semester_items.csv') 
                                             
