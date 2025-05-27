@@ -3,5 +3,6 @@ This folder contains a link to download the MOOCCube dataset, train, validation,
 MOOCCube dataset and corresponding descriptions can be found in this link: http://moocdata.cn/data/MOOCCube#MOOCCube.
 This dataset is collected from XuetangX, which is a popular MOOC platform in China. 
 
-The MOOCCube dataset contains over 700 MOOC courses, 200k students, and 100k concepts with 300k relation instances that span from 2017 to 2019. We have preprocessed the MOOCCube data to better model users and courses by filtering out users with few interactions. Specifically, we retained users with more than five interactions and courses with more than ten interactions in our work. 
+The MOOCCube dataset contains over 700 MOOC courses, 200k students, and 100k concepts with 300k relation instances that span from 2017 to 2019. 
+  We have preprocessed the MOOCCube data to better model users and courses by filtering out users with few interactions. Specifically, we retained users with more than five interactions and courses with more than ten interactions in our work. 
   After preprocessing, we have 34,916 students, 698 courses, and 273,072 student-course interactions. This dataset is split into an 80:20 ratio to use 20% courses of each user for testing and 80% courses for training. We use 10% of the training data for validation purposes.
