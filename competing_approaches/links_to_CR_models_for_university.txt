@@ -1,2 +1,0 @@
-The implementation of 2 sequential models (CourseDREAM and Scholars Walk) is available here: https://github.com/PolyDataLab/SessionBasedCourseRecommendation/tree/main
-The implementation of the PlanBERT model is provided here: https://github.com/CAHLR/PLAN-BERT
