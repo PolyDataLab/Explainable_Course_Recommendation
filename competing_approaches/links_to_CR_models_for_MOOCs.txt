@@ -1,2 +1,0 @@
-Implementaion of KEAM model is available in this link: https://github.com/Big-God-Tianyuan/Baselines
-The code for UPGPR model is provided in: https://github.com/epfl-ml4ed/courserec
