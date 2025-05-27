@@ -1,0 +1,7 @@
+best configuration of hyperparameters of our KGXCR model on MOOCCube data:
+for GAT module: number of GAT layers = 1, embedding dimension = 32, number of epochs = 100, learning rate = 0.01, number of heads = 1, edge dropout = 0.2, node dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1
+For GRU module: number of GRU layers = 1, dropout = 0.5, learning rate = 0.01. 
+
+  best configuration of hyperparameters of our KGXCR model on CNPC data:
+for GAT module: number of GAT layers = 1, embedding dimension = 32, number of epochs = 300, learning rate = 0.01, number of heads = 2, edge dropout = 0, node dropout = 0.2, threshold_weight_edges_iw (course-keyword) = None (no course description data is available) 
+For GRU module: number of GRU layers = 1, dropout = 0.4, learning rate = 0.01. 
