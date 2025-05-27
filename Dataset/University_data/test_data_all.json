@@ -1,0 +1,14 @@
+{"user":0,"courseID":"CIS113", "semester": "Summer20xx"}
+{"user":0,"courseID":"CIS114", "semester": "Summer20xx"}
+{"user":0,"courseID":"CIS115", "semester": "Fall20xx"}
+{"user":0,"courseID":"CIS116", "semester": "Fall20xx"}
+{"user":0,"courseID":"CIS117", "semester": "Fall20xx"}
+{"user":1,"courseID":"CIS112", "semester": "Fall20xx"}
+{"user":1,"courseID":"CIS114", "semester": "Fall20xx"}
+{"user":1,"courseID":"CIS115", "semester": "Fall20xx"}
+{"user":2,"courseID":"CIS108", "semester": "Summer20xx"}
+{"user":2,"courseID":"CIS114", "semester": "Summer20xx"}
+{"user":2,"courseID":"CIS117", "semester": "Summer20xx"}
+{"user":2,"courseID":"CIS115", "semester": "Fall20xx"}
+{"user":2,"courseID":"CIS116", "semester": "Fall20xx"}
+{"user":2,"courseID":"CIS118", "semester": "Fall20xx"}
