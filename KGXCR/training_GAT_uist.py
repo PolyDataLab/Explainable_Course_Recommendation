@@ -1,5 +1,4 @@
-#sophos server
-# adding one user at a time
+# training the GAT module
 import time
 import pandas as pd
 from preprocess_v1 import *
