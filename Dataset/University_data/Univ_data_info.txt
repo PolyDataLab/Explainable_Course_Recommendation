@@ -1,7 +1,7 @@
 This folder contains information about course enrollment data collected from the university. 
 
 Unfortunately, we can not share University data due to the privacy issue of the students. 
-The dataset is similar to the provided MOOC dataset with some exceptions. 
+The dataset is similar to the provided MOOC dataset with some exceptions. We provide sample train, validation, and test sets in this folder. 
 
 Sample dataset:
 userID  courseID   semester_info  grade     course_name     course_description  
