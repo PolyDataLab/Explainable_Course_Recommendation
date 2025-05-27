@@ -314,11 +314,11 @@ def preprocess_test_data(input_data, item_list, reversed_item_dict_one_hot, num_
 
 
 if __name__ == '__main__':
-    train_data = pd.read_json('./train_data_all.json', orient='records', lines= True)
+    train_data = pd.read_json('./Dataset/University_data/train_data_all.json', orient='records', lines= True)
     train_set, target_set, total_set, item_list, item_dict, reversed_item_dict,  one_hot_encoded_train, one_hot_encoded_df_train, item_dict_one_hot, reversed_item_dict_one_hot, user_dict_one_hot, one_hot_encoded_train2, user_dict_one_hot_train, reversed_user_dict_one_hot_train = preprocess_data(train_data)
-    valid_data = pd.read_json('./valid_data_all.json', orient='records', lines= True)
+    valid_data = pd.read_json('./Dataset/University_data/valid_data_all.json', orient='records', lines= True)
     dataValid_prev, dataValid_target, dataValid_Total, one_hot_encoded_valid, user_dict_one_hot_valid, reversed_user_dict_one_hot_valid = preprocess_valid_data(valid_data, item_list, reversed_item_dict_one_hot, len(user_dict_one_hot))
-    test_data = pd.read_json('./test_data_all.json', orient='records', lines= True)
+    test_data = pd.read_json('./Dataset/University_data/test_data_all.json', orient='records', lines= True)
     dataTest_prev, dataTest_target, datatest_Total, one_hot_encoded_test, user_dict_one_hot_test, reversed_user_dict_one_hot_test = preprocess_test_data(test_data, item_list, reversed_item_dict_one_hot, len(user_dict_one_hot))
     #print(datatest_Total)
     print(item_dict_one_hot)
