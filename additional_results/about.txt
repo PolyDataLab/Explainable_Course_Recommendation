@@ -1,1 +1,0 @@
-In this folder, we provide some additional results for several models on both MOOC datasets. We do have results on other metrics, but we provide results on Recall@10 scores in this PDF. 
