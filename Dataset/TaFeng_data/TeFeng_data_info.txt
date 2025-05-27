@@ -1,0 +1,6 @@
+This dataset is publicly available at: https://www.kaggle.com/chiranjivdas09/ta-feng-grocery-dataset. 
+
+For the Ta-Feng dataset, we utilize user-item interactions and side information of items (product categories and sales prices). To be consistent with the literature, we remove a user's history with fewer than three sessions. 
+  We split the dataset into the train, validation, and test sets, where we take out 20% users for testing their last basket as the target basket, and from the remaining 80%, we use 90% for training, and 10% for validation and model selection; the split ratio is 72:8:20. 
+  After preprocessing, there are 3,881 unique items and 1,097 categories of items, and we classify the sales price into 3 categories (low, medium, and high). We have 14,066, 1,125, and 2,813 instances in the training, validation, and test sets.
+
