@@ -290,16 +290,16 @@ def negative_sample(pickle_file, train_data_all, valid_sample_without_target, te
 
 if __name__ == '__main__':
    
-   train_data = pd.read_json('./train_data_all.json', orient='records', lines= True)
+   train_data = pd.read_json('./Dataset/University_data/train_data_all.json', orient='records', lines= True)
    train_data, item_dict, user_dict, reversed_item_dict, reversed_user_dict = preprocess_train_data_part1(train_data)
    train_all, train_set_without_target, target, max_len = preprocess_train_data_part2(train_data) 
    
-   valid_data = pd.read_json('./valid_data_all.json', orient='records', lines= True)
+   valid_data = pd.read_json('./Dataset/University_data/valid_data_all.json', orient='records', lines= True)
    valid_data, user_dict2, reversed_user_dict2 = preprocess_valid_data_part1(valid_data, reversed_user_dict, item_dict)
    valid_all, valid_set_without_target, valid_target = preprocess_valid_data_part2(valid_data) #  #, 
    #print("reversed_user_dict2: ", reversed_user_dict2)
    #print(valid_all)
-#    test_data = pd.read_json('./test_data_all.json', orient='records', lines= True)
+#    test_data = pd.read_json('./Dataset/University_data/test_data_all.json', orient='records', lines= True)
    test_data = pd.read_json('./test_data_all.json', orient='records', lines= True)
 
    test_data, user_dict3, reversed_user_dict3 = preprocess_test_data_part1(test_data, reversed_user_dict, item_dict, reversed_user_dict2)
