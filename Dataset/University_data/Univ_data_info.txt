@@ -1,0 +1,19 @@
+This folder contains information about course enrollment data collected from the university. 
+
+Unfortunately, we can not share University data due to the privacy issue of the students. 
+The dataset is similar to the provided MOOC dataset with some exceptions. 
+
+Sample dataset:
+userID  courseID   semester_info  grade     course_name     course_description  
+1        "XXX"     "Spring20xx"     "B+"         "XXX"          "XXX"
+1        "XXX"     "Summer20xx"     "A"          "XXX"          "XXX"
+1        "XXX"     "Fall20xx"       "A-"         "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "A"          "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "A-"         "XXX"          "XXX"
+2        "XXX"     "Spring20xx"     "B+"         "XXX"          "XXX"
+...
+
+The university dataset contains the course registration history of 3328 students, 618 unique courses, and 58,803 student-course interactions. We remove the less frequent courses that appeared less than 3 times all over the dataset. We split the dataset into train, validation, and test sets, where we use the last 3 semesters' data for testing, the previous 3 semesters' data for validation, and the rest of the data for training. 
+  Overall, we have student-course interactions over semesters and course descriptions for our university dataset.  Some of the methods developed for MOOCs also use concepts. So, we need to generate some keywords for each course based on the course descriptions. 
+  So, after preprocessing, we use a chatbot of a large language model (GPT-4o) to extract 5-10 meaningful course concepts by providing course names and descriptions as prompts. We use the following prompt: 
+  "Assume that you are a concept extractor from the textual data. You are given the course code, course name, and course description. Your task is to extract a list of 5 to 10 concepts for each course from the course descriptions and your knowledge base."    
