@@ -1,16 +1,13 @@
-This folder contains python implementation of explainable course recommendation model (KGXCR). 
-information about python codes: (run train_test_uist_explainable_KGXCR.py to run all the codes and get results)
+This folder contains python implementation of the proposed explainable course recommendation model (KGXCR). 
+
+Information about Python codes: (run train_test_uist_explainable_KGXCR.py to run all the codes and get results)
 
 train_test_uist_explainable_KGXCR.py --> main function to run all the codes and get recommendation results, and generate 3 types of explanations.
 config.py--> configuration of different parameters. 
-data_helpers.py --> some important functions to preprocess the data and creating batches of training data
+data_helpers.py --> some important functions to preprocess the data and create batches of training data
 preprocess_for_GAT--> data preprocessing to run the GAT module.
 dataprocess_v1.py --> data preprocessing to run the sequential (GRU or LSTM) module.
-rnn_model_GPU.py --> define rnn model using PyTorch. 
-training_GAT_uist.py --> Define GAT class and run the GAT module to get the node embeddings. 
-utils.py --> some utility function to do post-processing.
+rnn_model_GPU.py --> Define rnn model using PyTorch. 
+training_GAT_uist.py --> Define the GAT class and run the GAT module to get the node embeddings. 
+utils.py --> some utility functions to do post-processing.
 offered_courses_v2.py --> Create an offered course list for each semester from all the data. 
-
-best configuration of hyperparameters:
-for GAT module: number of GAT layers = 1, embedding dimension = 128, number of epochs = 400, learning rate = 0.001, number of heads = 4, edge dropout = 0, node = dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1, threshold_weight_edges_cc (course-course) = 0.1
-For GRU module: number of GRU layers = 3, dropout = 0.5, learning rate = 0.01. 
