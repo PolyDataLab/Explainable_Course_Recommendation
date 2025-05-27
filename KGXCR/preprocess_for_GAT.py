@@ -1,5 +1,4 @@
 # preprocess for adding user nodes (one at a time or all nodes together) or use updated embeddings without fitting a new graph into the model
-# for diamond server
 import numpy as np
 import pandas as pd
 import time
