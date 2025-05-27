@@ -1,1 +1,0 @@
-This folder contains code or links to implement course recommendation models developed for university settings, MOOC platforms, and tested for the grocery dataset.

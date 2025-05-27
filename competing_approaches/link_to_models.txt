@@ -1,0 +1,10 @@
+This folder contains code or links to implement course recommendation models proposed for university settings, MOOC platforms, and tested for the grocery dataset. We use the following codes to implement the corresponding models.
+
+The implementation of 2 sequential models (CourseDREAM and Scholars Walk) proposed for the university environment is available here: https://github.com/PolyDataLab/SessionBasedCourseRecommendation/tree/main
+The implementation of the PlanBERT model proposed for the university environment is provided here: https://github.com/CAHLR/PLAN-BERT
+
+The implementation of the KEAM model proposed for MOOC recommendation is available in this link: https://github.com/Big-God-Tianyuan/Baselines
+The code for the UPGPR model proposed for MOOCs is provided in: https://github.com/epfl-ml4ed/courserec
+
+The code to implement the MMNR model proposed for next basket recommendation is available here: https://github.com/Hiiizhy/MMNR/tree/main
+
