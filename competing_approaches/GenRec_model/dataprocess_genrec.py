@@ -25,25 +25,8 @@ def preprocess_train_data_part1(input_data):
         data['baskets'][index] = new_baskets
         index +=1                
 
-    # itemID_values = data["itemID"].astype('str')
-    # sorting by itemIDs
-    # itemIDs = sorted(set(itemID_values))
-    # print("itemIDs: ", itemIDs)
-    # converting itemIDs into index from 0 to length(item_list)-1
-    # itemIDs = {c: i for (i, c) in enumerate(itemIDs)}
-    # print("itemIDs: ", itemIDs)
     
     reversed_item_dict = dict(zip(itemIDs.values(), itemIDs.keys()))
-    # print("reversed_item_dict: ", reversed_item_dict)
-    # data["itemID"] = itemID_values.map(itemIDs).astype('int32')
-
-    # users = sorted(set(data["userID"]))
-
-    # #converting userIDs into index from 0 to length(user_list)-1
-    # users_dict = {c: i for (i, c) in enumerate(users)}
-    # reversed_user_dict = dict(zip(users_dict.values(), users_dict.keys()))
-    # #print("reversed_user_dict: ", reversed_user_dict)
-    # data["userID"] = data["userID"].map(users_dict)
     user_dict = {}
     index = 0
     len1 =0
@@ -112,7 +95,7 @@ def preprocess_train_data_part2(input_data):
         target_set.append(row)
     
     target_set = pd.DataFrame(target_set, columns=['userID', 'baskets'])
-    pickle_file = '/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/train_set_all.pickle'
+    pickle_file = './DataSet/University_data/train_set_all.pickle'
     with open(pickle_file, 'wb') as handle:
         train_samples = {}
         #total_items = set()
@@ -125,9 +108,9 @@ def preprocess_train_data_part2(input_data):
             train_samples[u] = u_baskets
         pickle.dump(train_samples, handle)
    
-    train_set_all.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/train_sample_all_cr_v2.json', orient='records', lines=True)
-    train_set_without_target.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/train_set_without_target_cr_v2.json', orient='records', lines=True)
-    target_set.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/target_set_cr_v2.json', orient='records', lines=True)
+    train_set_all.to_json('./DataSet/University_data/train_sample_all_cr_v2.json', orient='records', lines=True)
+    train_set_without_target.to_json('./DataSet/University_data/train_set_without_target_cr_v2.json', orient='records', lines=True)
+    target_set.to_json('./DataSet/University_data/target_set_cr_v2.json', orient='records', lines=True)
     return train_set_all, train_set_without_target, target_set, max_len, avg_repeat_ratio, max_basket_size
     #return train_set_all, train_set_without_target, target_set, max_len
 
@@ -215,7 +198,7 @@ def preprocess_valid_data_part2(input_data):
         index += 1
     validation_target_set = pd.DataFrame(validation_target_set, columns=['userID', 'baskets'])
 
-    pickle_file = '/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/valid_set_all.pickle'
+    pickle_file = './DataSet/University_data/valid_set_all.pickle'
     with open(pickle_file, 'wb') as handle:
         valid_samples = {}
         #total_items = set()
@@ -228,9 +211,9 @@ def preprocess_valid_data_part2(input_data):
             valid_samples[u] = u_baskets
         pickle.dump(valid_samples, handle)
     
-    valid_set_all.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/valid_sample_all_cr_v2.json', orient='records', lines=True)
-    valid_set_without_target.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/valid_sample_without_target_cr_v2.json', orient='records', lines=True)
-    validation_target_set.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/validation_target_set_cr_v2.json', orient='records', lines=True)
+    valid_set_all.to_json('./DataSet/University_data/valid_sample_all_cr_v2.json', orient='records', lines=True)
+    valid_set_without_target.to_json('./DataSet/University_data/valid_sample_without_target_cr_v2.json', orient='records', lines=True)
+    validation_target_set.to_json('./DataSet/University_data/validation_target_set_cr_v2.json', orient='records', lines=True)
     return valid_set_all, valid_set_without_target, validation_target_set
     #return valid_set_all, valid_set_without_target, validation_target_set
 
@@ -268,11 +251,6 @@ def preprocess_test_data_part1(input_data, reversed_user_dict, item_dict, revers
         index += 1
         len1+=1
         reversed_user_dict3[user_dict3[user]]= user
-
-    #reversed_user_dict3 = dict(zip(user_dict3.values(), user_dict3.keys()))
-    # baskets = data.groupby(['userID', 'timestamp'])['itemID'].apply(list).reset_index()
-    # baskets = baskets.groupby(['userID'])['itemID'].apply(list).reset_index()  #
-    # baskets.columns = ['userID', 'baskets']
 
     #baskets['num_baskets'] = baskets.baskets.apply(len)
 
@@ -317,7 +295,7 @@ def preprocess_test_data_part2(input_data):
             test_target_set.append(row)
         index +=1
     test_target_set = pd.DataFrame(test_target_set, columns=['userID', 'baskets'])
-    pickle_file = '/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_set_all.pickle'
+    pickle_file = './DataSet/University_data/test_set_all.pickle'
     with open(pickle_file, 'wb') as handle:
         test_samples = {}
         #total_items = set()
@@ -330,12 +308,9 @@ def preprocess_test_data_part2(input_data):
             test_samples[u] = u_baskets
         pickle.dump(test_samples, handle)
    
-    test_set_all.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_sample_all_cr_v2.json', orient='records', lines=True)
-    test_set_without_target.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_sample_without_target_cr_v2.json', orient='records', lines=True)
-    test_target_set.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_target_set_cr_v2.json', orient='records', lines=True)
-    # test_set_all.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_sample_all_with_more_target_baskets.json', orient='records', lines=True)
-    # test_set_without_target.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_sample_without_target_with_more_target_baskets.json', orient='records', lines=True)
-    # test_target_set.to_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_target_set_with_more_target_baskets.json', orient='records', lines=True)
+    test_set_all.to_json('./DataSet/University_data/test_sample_all_cr_v2.json', orient='records', lines=True)
+    test_set_without_target.to_json('./DataSet/University_data/test_sample_without_target_cr_v2.json', orient='records', lines=True)
+    test_target_set.to_json('./DataSet/University_data/test_target_set_cr_v2.json', orient='records', lines=True)
     return test_set_all, test_set_without_target, test_target_set
     #return test_set_all, test_set_without_target, test_target_set
 def negative_sample(pickle_file, train_data_all, valid_sample_without_target, test_sample_without_target):
@@ -347,13 +322,13 @@ def negative_sample(pickle_file, train_data_all, valid_sample_without_target, te
     Returns:
          (key: values) -> (userID: negative samples for the user)
     """
-    #pickle_file = '/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/neg_sample_cr_v2.pickle'
+    #pickle_file = './DataSet/University_data/neg_sample_cr_v2.pickle'
     with open(pickle_file, 'wb') as handle:
-        # train_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/train_sample_all.json', orient='records', lines= True)
-        # #train_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/CDREAM_LGCN_2/train_sample_main.json', orient='records', lines= True)
-        # #valid_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/CDREAM_LGCN_2/validation_sample_main.json', orient='records', lines=True)
-        # valid_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/valid_sample_without_target.json', orient='records', lines=True)
-        # test_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_sample_without_target.json', orient='records', lines=True)
+        # train_data = pd.read_json('./DataSet/University_data/train_sample_all.json', orient='records', lines= True)
+        # #train_data = pd.read_json('./CDREAM_LGCN_2/train_sample_main.json', orient='records', lines= True)
+        # #valid_data = pd.read_json('./CDREAM_LGCN_2/validation_sample_main.json', orient='records', lines=True)
+        # valid_data = pd.read_json('./DataSet/University_data/valid_sample_without_target.json', orient='records', lines=True)
+        # test_data = pd.read_json('./DataSet/University_data/test_sample_without_target.json', orient='records', lines=True)
         train_data = train_data_all
         valid_data = valid_sample_without_target
         test_data = test_sample_without_target
@@ -386,30 +361,16 @@ def negative_sample(pickle_file, train_data_all, valid_sample_without_target, te
 
 
 if __name__ == '__main__':
-   #train, test, valid = split_data('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/CDREAM_LGCN_2/train_sample.csv')
-   #train_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Filtered_data/train_sample_augmented_CR.json', orient='records', lines= True)
-   #train_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/train_data_all_CR.json', orient='records', lines= True)
-   train_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/train_data_all_CR.json', orient='records', lines= True)
-   # train_data_all_CR
+   train_data = pd.read_json('./DataSet/University_data/train_data_all.json', orient='records', lines= True)
    train_data, item_dict, user_dict, reversed_item_dict, reversed_user_dict = preprocess_train_data_part1(train_data)
    train_all, train_set_without_target, target, max_len, repeat_ratio, max_basket_size = preprocess_train_data_part2(train_data) 
-   #print(len(item_dict))
-#    print(train_all)
-#    print("max_len:", max_len)
-   #print(target)
-   #valid_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/valid_data_all.json', orient='records', lines= True)
-   #valid_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/valid_data_all_CR.json', orient='records', lines= True)
-   valid_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/valid_data_all_CR.json', orient='records', lines= True)
+   valid_data = pd.read_json('./DataSet/University_data/valid_data_all.json', orient='records', lines= True)
    valid_data, user_dict2, reversed_user_dict2 = preprocess_valid_data_part1(valid_data, reversed_user_dict, item_dict)
    valid_all, valid_set_without_target, valid_target = preprocess_valid_data_part2(valid_data) #  #, 
-   #print("reversed_user_dict2: ", reversed_user_dict2)
-   #print(valid_all)
-#    test_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/test_data_all_CR.json', orient='records', lines= True)
-   #test_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/test_data_all_CR.json', orient='records', lines= True)
-   test_data = pd.read_json('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/test_data_all_CR.json', orient='records', lines= True)
+   test_data = pd.read_json('./DataSet/University_data/test_data_all_CR.json', orient='records', lines= True)
    test_data, user_dict3, reversed_user_dict3 = preprocess_test_data_part1(test_data, reversed_user_dict, item_dict, reversed_user_dict2)
    test_all, test_set_without_target, test_target = preprocess_test_data_part2(test_data) #, item_dict, user_dict, reversed_item_dict, reversed_user_dict #, 
    #print(test_all) 
-   negative_sample('/a/bear.cs.fiu.edu./disk/bear-b/users/mkhan149/Downloads/Experiments/Others/MMNR/neg_sample_cr_v2.pickle', train_all, valid_set_without_target, test_set_without_target)
+   negative_sample('./DataSet/University_data/neg_sample_cr_v2.pickle', train_all, valid_set_without_target, test_set_without_target)
    print("max_len: ", max_len)
    print("max_basket_size: ", max_basket_size)
