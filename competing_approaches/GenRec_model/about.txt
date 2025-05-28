@@ -1,0 +1,1 @@
+This folder contains the code to implement the GenRec model proposed in this paper: "Generative next-basket recommendation". 
