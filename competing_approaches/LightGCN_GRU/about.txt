@@ -1,0 +1,11 @@
+This folder contains the codes (in python language) to implement the LightGCN+GRU model. 
+
+train_test_uist_LGCN_GRU.py --> main function to run all the codes and get recommendation results with LightGCN+GRU model. 
+config.py--> configuration of different parameters. 
+data_helpers.py --> some important functions to preprocess the data and creating batches of training data
+preprocess_for_LGCN--> data preprocessing to run the LightGCN module.
+dataprocess_v1.py --> data preprocessing to run the sequential (GRU or LSTM) module.
+rnn_model_GPU.py --> define rnn model using PyTorch. 
+training_LGCN_uist.py --> Define LightGCN class and run the LightGCN module to get the node embeddings. 
+utils.py --> some utility function to do post-processing.
+offered_courses_v2.py --> Create an offered course list for each semester from all the data. 
