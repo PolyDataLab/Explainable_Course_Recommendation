@@ -1,8 +1,8 @@
 This folder contains the code to implement the GenRec model proposed in this paper: "Generative next-basket recommendation". 
 
-Information about Python codes: (run train_genrec_main.py to run all the codes and get results)
+Information about Python codes: (run train_test_genrec_main.py to run all the codes and get results)
 
-train_genrec_main.py --> main function to run all the codes and get recommendation results using the GenRec model.
+train_test_genrec_main.py --> main function to run all the codes and get recommendation results using the GenRec model.
 config_genrec.py--> configuration of different parameters. 
 dataprocess_genrec.py --> data preprocessing to create the baskets of courses in training, validation, and test sets.
 data_helpers_genrec.py --> some important functions to preprocess the data and create batches of training data
