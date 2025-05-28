@@ -30,7 +30,7 @@ def load_data(input_file, flag=None):
 
 #loading model file
 def load_model_file(checkpoint_dir):
-    MODEL_DIR = './MMNR/runs_cr_genrec_v1/' + checkpoint_dir
+    MODEL_DIR = './GenRec_model/runs_cr_genrec_v1/' + checkpoint_dir
     #MODEL_DIR = checkpoint_dir
     names = [name for name in os.listdir(MODEL_DIR) if os.path.isfile(os.path.join(MODEL_DIR, name))]
     max_epoch = 0
@@ -39,7 +39,7 @@ def load_model_file(checkpoint_dir):
         if int(name[6:8]) >= max_epoch:
             max_epoch = int(name[6:8])
             choose_model = name
-    MODEL_FILE = './MMNR/runs_cr_genrec_v1/' + checkpoint_dir + '/' + choose_model
+    MODEL_FILE = './GenRec_model/runs_cr_genrec_v1/' + checkpoint_dir + '/' + choose_model
     #MODEL_FILE = checkpoint_dir + '/' + choose_model
     return MODEL_FILE
 
