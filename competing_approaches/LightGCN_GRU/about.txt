@@ -1,6 +1,6 @@
-This folder contains the codes (in python language) to implement the LightGCN+GRU model. 
+This folder contains the codes (in Python) to implement the LightGCN+GRU model introduced in our paper. 
 
-train_test_uist_LGCN_GRU.py --> main function to run all the codes and get recommendation results with LightGCN+GRU model. 
+train_test_uist_LGCN_GRU.py --> main function to run all the codes and get recommendation results with the LightGCN+GRU model. 
 config.py--> configuration of different parameters. 
 data_helpers.py --> some important functions to preprocess the data and creating batches of training data
 preprocess_for_LGCN--> data preprocessing to run the LightGCN module.
