@@ -18,11 +18,11 @@ import utils
 from utils import *
 #from offered_courses import *
 import pandas as pd
-import preprocess_for_GAT
+import preprocess_for_LGCN
 from offered_courses_v2 import *
 #from topic_model_v2 import *
 import math
-from training_GAT_uist import * # type: ignore  # scp
+from training_LGCN_uist import * # type: ignore  # scp
 from sklearn.preprocessing import MultiLabelBinarizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import csr_matrix
@@ -1334,7 +1334,7 @@ if __name__ == '__main__':
     l_rate = [0.01, 0.001]
     edge_dropout = [0, 0.2]
     node_dropout = [0, 0.2]
-    n_heads= [2,1,4]
+    # n_heads= [2,1,4]
 
     n_rnn_layers = [1, 2, 3]
     rnn_dropout = [0.3, 0.4, 0.5]
@@ -1348,7 +1348,7 @@ if __name__ == '__main__':
     num_fet = num_cat_f + num_level_f + num_text_f
     device = torch.device("cpu")
 
-    base_path = './saved_model_GAT_CDREAM_uis_text_GRU_avg_attn_layers_v3_keywords_tfidf/'
+    base_path = './saved_model_LGCN_CDREAM_uis_text_GRU_avg_attn_layers_v3_keywords_tfidf/'
     all_results = []
     cnt3 = 0
     cnt4 = 1 # 0 
@@ -1356,24 +1356,22 @@ if __name__ == '__main__':
         for n_lays in n_layers:
             for emb_dim in embedding_dim:
                 for epoc in n_epochs:
-                # for lr in l_rate:
-                    for n_hds in n_heads:
                         for edge_drops in edge_dropout:
                             for node_drops in node_dropout:
                                 model_filename = f"model_v{cnt4}.pth"
                                 full_path = os.path.join(base_path, model_filename)
                                 print("random number 1: ")
                                 print(torch.rand(1))
-                                model = GAT(num_users, num_items, num_fet, emb_dim, n_lays, edge_drops, node_drops, n_hds, seed_value).to(device)                             
+                                model = LightGCN(num_users, num_items, num_fet, emb_dim, n_lays, edge_drops, node_drops, seed_value).to(device)
+                                                         
                                 if os.path.exists(full_path):
                                     print(f"Loading model from {full_path}")
                                     model.load_state_dict(torch.load(full_path))  # Load state_dict into the model
                                     item_embeddings = model.item_embeddings.weight.detach()
                                 else:
                                     print(f"No saved model found at {full_path}. Training from scratch.")
-                                    # model, data10, final_x, final_attn_weights, final_edge_index, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, n_hds, threshold_weight_edges_iw, threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, cnt4)
-                                    # item_embeddings = final_x[:num_items]
-                                    model, data10, final_x, final_attn_weights, final_edge_index, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, n_hds, threshold_weight_edges_iw, threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, cnt4)
+                                    
+                                    model, data10, final_x, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_lays, emb_dim, epoc, lr, edge_drops, node_drops, threshold_weight_edges_iw, threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, cnt4)
                                     item_embeddings = final_x[:num_items]
                                 cnt4 += 1
                                 #device = torch.device("cpu")
