@@ -4,7 +4,7 @@ class Config(object):
         self.VALIDATIONSET_DIR = './DataSet/University_data/valid_sample_without_target_cr_v2.json'
         self.TESTSET_DIR = './DataSet/University_data/target_set_cr_v2.json'
         self.NEG_SAMPLES = './DataSet/University_data/neg_sample_cr_v2.pickle'
-        self.MODEL_DIR = './DataSet/University_data/runs_cr_genrec_v1/'
+        self.MODEL_DIR = './GenRec_model/runs_cr_genrec_v1/'
         self.cuda = False
         self.clip = 10
         #self.epochs = 200
