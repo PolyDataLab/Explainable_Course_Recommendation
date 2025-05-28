@@ -1,10 +1,10 @@
 class Config(object):
     def __init__(self):
-        self.TRAININGSET_DIR = './MMNR/train_sample_all_cr_v2.json'
-        self.VALIDATIONSET_DIR = './MMNR/valid_sample_without_target_cr_v2.json'
-        self.TESTSET_DIR = './MMNR/target_set_cr_v2.json'
-        self.NEG_SAMPLES = './MMNR/neg_sample_cr_v2.pickle'
-        self.MODEL_DIR = './MMNR/runs_cr_genrec_v1/'
+        self.TRAININGSET_DIR = './DataSet/University_data/train_sample_all_cr_v2.json'
+        self.VALIDATIONSET_DIR = './DataSet/University_data/valid_sample_without_target_cr_v2.json'
+        self.TESTSET_DIR = './DataSet/University_data/target_set_cr_v2.json'
+        self.NEG_SAMPLES = './DataSet/University_data/neg_sample_cr_v2.pickle'
+        self.MODEL_DIR = './DataSet/University_data/runs_cr_genrec_v1/'
         self.cuda = False
         self.clip = 10
         #self.epochs = 200
