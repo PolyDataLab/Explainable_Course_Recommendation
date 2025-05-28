@@ -1,3 +1,12 @@
-Best configuration of hyperparameters for our proposed KGXCR model:
-for GAT module: number of GAT layers = 1, embedding dimension = 128, number of epochs = 400, learning rate = 0.001, number of heads = 4, edge dropout = 0, node dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1, threshold_weight_edges_cc (course-course) = 0.1
-For GRU module: number of GRU layers = 3, dropout = 0.5, learning rate = 0.01. 
+The best configuration of hyperparameters for our proposed KGXCR model:
+for GAT module: number of GAT layers = 1, embedding dimension = 128, number of epochs = 400, learning rate = 0.001, number of heads = 4, edge dropout = 0, node dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1, threshold_weight_edges_cc (course-course) = 0.2,
+for GRU module: number of GRU layers = 3, dropout = 0.5, learning rate = 0.01. 
+
+The best configuration of hyperparameters for the LightGCN+GRU model:
+for LightGCN module: number of LightGCN layers = 3, embedding dimension = 64, number of epochs = 300, learning rate = 0.001, edge dropout = 0, node dropout = 0, threshold_weight_edges_iw (course-keyword) = 0.1, threshold_weight_edges_cc (course-course) = 0.2
+For GRU module: number of GRU layers = 1, dropout = 0.4, learning rate = 0.01. 
+
+The best configuration of hyperparameters for the CourseDREAM model:
+number of LSTM layers = 3, embedding dimension = 64, dropout = 0.4, learning rate = 0.01.
+
+The best configuration of hyperparameters for the UPGPR model:
