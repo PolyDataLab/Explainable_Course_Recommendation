@@ -10,3 +10,4 @@ The best configuration of hyperparameters for the CourseDREAM model:
 number of LSTM layers = 3, embedding dimension = 64, dropout = 0.4, learning rate = 0.01.
 
 The best configuration of hyperparameters for the UPGPR model:
+maximum path length = 7, embedding dimension = 64, number of hidden units= 128, 64.
