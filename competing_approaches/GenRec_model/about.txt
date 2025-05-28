@@ -4,8 +4,8 @@ Information about Python codes: (run train_genrec_main.py to run all the codes a
 
 train_genrec_main.py --> main function to run all the codes and get recommendation results using the GenRec model.
 config_genrec.py--> configuration of different parameters. 
-data_helpers_genrec.py --> some important functions to preprocess the data and create batches of training data
 dataprocess_genrec.py --> data preprocessing to create the baskets of courses in training, validation, and test sets.
+data_helpers_genrec.py --> some important functions to preprocess the data and create batches of training data
 genrec_model.py --> Define genrec model using PyTorch. 
 utils.py --> some utility functions to do post-processing.
 offered_courses_v2.py --> Create an offered course list for each semester from all the data. 
