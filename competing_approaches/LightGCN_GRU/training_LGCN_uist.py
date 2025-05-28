@@ -1,4 +1,4 @@
-# training the GAT module
+# training the LGCN module
 import time
 import pandas as pd
 from preprocess_v1 import *
