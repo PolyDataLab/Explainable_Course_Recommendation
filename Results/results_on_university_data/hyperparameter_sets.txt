@@ -7,7 +7,13 @@ for LightGCN module: number of LightGCN layers = 3, embedding dimension = 64, nu
 For GRU module: number of GRU layers = 1, dropout = 0.4, learning rate = 0.01. 
 
 The best configuration of hyperparameters for the CourseDREAM model:
-number of LSTM layers = 3, embedding dimension = 64, dropout = 0.4, learning rate = 0.01.
+number of LSTM layers = 3, embedding dimension = 64, dropout = 0.4, learning rate = 0.01, number of epochs = 10.
 
 The best configuration of hyperparameters for the UPGPR model:
-maximum path length = 7, embedding dimension = 64, number of hidden units= 128, 64.
+maximum path length = 7, embedding dimension = 64, number of hidden units= 128, 64, number of epochs = 100.
+
+The best configuration of hyperparameters for the MMNR model:
+decay = 0.6, embedding dimension = 96,number of epochs = 100, batch size = 32. 
+
+The best configuration of hyperparameters for the GenRec model:
+number of attention layers = 2, embedding dimension = 64, dropout = 0.5, learning rate = 0.001, number of heads = 4, number of epochs = 10.
