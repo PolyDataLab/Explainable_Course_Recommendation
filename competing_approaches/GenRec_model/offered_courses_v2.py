@@ -1,13 +1,7 @@
 import pandas as pd
 #calculating offered courses in each semster and storing the list of courses in a dictionary for post-processing 
 def calculate_offered_dict(offered_course_dict, timestamp, course):
-    # if timestamp in offered_course_dict:
-    #     list_items= offered_course_dict[timestamp] #list of courses at a semester
-    # else:
-    #     list_items = []
-    # if course not in list_items:
-    #     list_items.append(course)
-    # offered_course_dict[timestamp] = list_items.copy()
+   
     if timestamp not in offered_course_dict:
         offered_course_dict[timestamp] = [course]
     else:
@@ -31,6 +25,5 @@ def offered_course_cal(input_path):
     return offered_course_dict
 
 if __name__ == '__main__':
-    #data1 = pd.read_json('/Users/mkhan149/Downloads/Experiments/all_data.json', orient='records', lines=True)
-    offered_course_dict = offered_course_cal('/lclhome/mkhan149/Downloads/Experiments/all_data_CR.json')
+    offered_course_dict = offered_course_cal('./all_data.json')
     #print(offered_course_dict[1221])
