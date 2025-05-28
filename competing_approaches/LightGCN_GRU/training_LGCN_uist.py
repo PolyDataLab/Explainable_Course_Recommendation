@@ -255,92 +255,89 @@ def convert_side_info_to_one_hot_encoding(data, reversed_item_dict_one_hot, num_
     return one_hot_encoded_cat, one_hot_encoded_level, cat_dict_one_hot, level_dict_one_hot, reversed_dict_cat_to_idx,  reversed_dict_level_to_idx, one_hot_df_cat, one_hot_df_level
 
 
-class GAT(torch.nn.Module):
-    def __init__(self, num_users, num_items, num_fet, embedding_dim, num_layers, edge_dropout, node_dropout, num_heads=1, seed_value = 42):
-        super(GAT, self).__init__()
+class LightGCNLayer(MessagePassing):
+    # def __init__(self):
+    #     super(LightGCNLayer, self).__init__(aggr="add")  # 'add' aggregation for GCN
+    def __init__(self, dropout_prob=0.0):
+        super(LightGCNLayer, self).__init__(aggr="add")  # 'add' aggregation for GCN
+        self.dropout_prob = dropout_prob
+
+    def forward(self, x, edge_index, edge_weight):
+        # Apply edge dropout
+        if self.dropout_prob > 0:
+            edge_index, edge_weight = dropout_adj(edge_index, edge_weight, p=self.dropout_prob, training=self.training)
+
+        # Normalize edge weights
+        row, col = edge_index
+        deg = degree(row, x.size(0), dtype=x.dtype)
+        deg_inv_sqrt = deg.pow(-0.5)
+        deg_inv_sqrt[deg_inv_sqrt == float('inf')] = 0
+        norm = deg_inv_sqrt[row] * edge_weight * deg_inv_sqrt[col]
+
+        # Propagate messages
+        return self.propagate(edge_index, x=x, edge_weight=norm)
+
+    def message(self, x_j, edge_weight):
+        # Scale messages by edge weights
+        return edge_weight.view(-1, 1) * x_j
+    
+class LightGCN(torch.nn.Module):
+    def __init__(self, num_users, num_items, num_features, embedding_dim, num_layers, edge_dropout, node_dropout, seed_value = 42):
+        super(LightGCN, self).__init__()
         self.num_users = num_users
         self.num_items = num_items
-        self.num_fet = num_fet
+        self.num_features = num_features
         self.embedding_dim = embedding_dim
         self.num_layers = num_layers
         self.edge_dropout = edge_dropout
         self.node_dropout = node_dropout
-        self.num_heads = num_heads
+        #self.dropout = torch.nn.Dropout(dropout)
+        # self.user_embeddings_LDA = user_embeddings_LDA
+        # self.item_embeddings_LDA = item_embeddings_LDA
 
         torch.manual_seed(seed_value)  # Ensure same random initialization
         # Initialize user and item embeddings
-        self.item_embeddings = torch.nn.Embedding(self.num_items, embedding_dim)
-        self.user_embeddings = torch.nn.Embedding(self.num_users, embedding_dim)
-        self.fet_embeddings = torch.nn.Embedding(self.num_fet, embedding_dim)
+        self.item_embeddings = torch.nn.Embedding(num_items, embedding_dim)
+        self.user_embeddings = torch.nn.Embedding(num_users, embedding_dim)
+        self.fet_embeddings = torch.nn.Embedding(num_features, embedding_dim)
+        # self.item_embeddings.weight = torch.nn.Parameter(torch.cat([self.item_embeddings.weight, self.item_embeddings_LDA], dim=1))
+        # self.user_embeddings.weight = torch.nn.Parameter(torch.cat([self.user_embeddings.weight, self.user_embeddings_LDA], dim=1))
+
         torch.nn.init.xavier_uniform_(self.item_embeddings.weight)
         torch.nn.init.xavier_uniform_(self.user_embeddings.weight)
         torch.nn.init.xavier_uniform_(self.fet_embeddings.weight)
-        print("init emb: ", self.item_embeddings.weight[:2])  # Print first 5 embeddings
+        # torch.nn.init.normal_(self.item_embeddings.weight, std=0.1)
+        # torch.nn.init.normal_(self.user_embeddings.weight, std=0.1)
 
-        # GAT layers
-        in_channels = out_channels = hidden_channels = embedding_dim
-        self.gat1 = GATConv(in_channels, hidden_channels, heads=num_heads, dropout=edge_dropout)
-        self.gat2 = GATConv(hidden_channels * num_heads, hidden_channels, heads=num_heads, dropout=edge_dropout)
-        self.gat3 = GATConv(hidden_channels * num_heads, out_channels, heads=1, concat=False, dropout=edge_dropout)
-        #self.linear_transform = torch.nn.Linear(hidden_channels * num_heads, embedding_dim)
+        # Create LightGCN layers
+        # self.convs = torch.nn.ModuleList([LightGCNLayer() for _ in range(num_layers)])
+        self.convs = torch.nn.ModuleList([
+            LightGCNLayer(dropout_prob=edge_dropout) for _ in range(num_layers)
+        ])
 
-    def forward(self, edge_index, edge_weight=None):
+    def forward(self, edge_index, edge_weight): 
+    #def forward(self, edge_index):
+        # Concatenate user and item embeddings
+        #if (x.size(0)==(self.num_users+self.num_items)):
+        # x = torch.cat([self.user_embeddings.weight, self.item_embeddings.weight], dim=0)
         x = torch.cat([self.item_embeddings.weight, self.user_embeddings.weight, self.fet_embeddings.weight], dim=0)
+        
         all_embeddings = [x]
-        attention_weights = []  # List to store attention weights
-        edge_index_out_all = []
 
-        if self.num_layers > 1:
-            # First GAT layer
-            x, (edge_index_out, alpha) = self.gat1(x, edge_index, edge_weight, return_attention_weights=True)
-            attention_weights.append(alpha)
-            edge_index_out_all.append(edge_index_out)
-            all_embeddings.append(x)
-
-            for _ in range(self.num_layers - 2):
-                x = F.relu(x)
+        # Apply each LightGCN layer
+        for conv in self.convs:
+            x = conv(x, edge_index, edge_weight)
+            if self.node_dropout > 0:  # Apply node dropout after each layer
                 x = F.dropout(x, p=self.node_dropout, training=self.training)
-                x, (edge_index_out, alpha) = self.gat2(x, edge_index, return_attention_weights=True)
-                attention_weights.append(alpha)
-                edge_index_out_all.append(edge_index_out)
-                all_embeddings.append(x)
-
-            # Final GAT layer
-            x = F.relu(x)
-            x = F.dropout(x, p=self.node_dropout, training=self.training)
-            x, (edge_index_out, alpha) = self.gat3(x, edge_index, return_attention_weights=True)
-            attention_weights.append(alpha)
-            edge_index_out_all.append(edge_index_out)
             all_embeddings.append(x)
 
-        else:
-            # Single-layer GAT
-            x, (edge_index_out, alpha) = self.gat1(x, edge_index, edge_weight, return_attention_weights=True)
-            attention_weights.append(alpha)
-            all_embeddings.append(x)
-            edge_index_out_all.append(edge_index_out)
+        # Average embeddings from each layer
+        final_embedding = torch.mean(torch.stack(all_embeddings, dim=0), dim=0)
 
-        # Aggregate all embeddings
-        if self.num_heads == 1:
-            final_embedding = torch.mean(torch.stack(all_embeddings, dim=0), dim=0) # avg over emb of all attention layers
-            #final_embedding = x
-        else:
-            all_emb = [all_embeddings[0]]
-            for emb in all_embeddings[1:]:
-                if emb.size(-1) != self.embedding_dim:
-                    emb = emb.view(emb.size(0), self.num_heads, -1)
-                    emb = emb.mean(dim=1)
-                all_emb.append(emb)
-            final_embedding = torch.mean(torch.stack(all_emb, dim=0), dim=0)  # avg over emb of all attention layers
-            #final_embedding = all_emb[-1]
-        #final_embedding = x
-        # Split final embedding
-        item_embedding = final_embedding[:self.num_items]
-        user_embedding = final_embedding[self.num_items:self.num_items + self.num_users]
-        fet_embedding = final_embedding[self.num_items + self.num_users:]
-
-        return item_embedding, user_embedding, fet_embedding, final_embedding, attention_weights, edge_index_out_all
-
+        # Separate final user and item embeddings
+        # user_embedding, item_embedding = final_embedding[:self.num_users], final_embedding[self.num_users:]
+        item_embedding, user_embedding, fet_embedding = final_embedding[:self.num_items], final_embedding[self.num_items:self.num_items+self.num_users], final_embedding[self.num_items+self.num_users:]
+        return item_embedding, user_embedding, fet_embedding, final_embedding
     
     def bpr_loss(self, user_embeddings, pos_item_embeddings, neg_item_embeddings):
         pos_scores = torch.sum(user_embeddings * pos_item_embeddings, dim=1)
@@ -350,8 +347,7 @@ class GAT(torch.nn.Module):
         # return -torch.mean(F.logsigmoid(pos_scores - neg_scores))
         return -torch.mean(F.logsigmoid(pos_scores - neg_scores))
 
-
-def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, one_hot_encoded_text, cc_seq_matrix, n_layers, embedding_dim, n_epochs, l_rate, edge_dropout, node_dropout, heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version):
+def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, one_hot_encoded_text, cc_seq_matrix, n_layers, embedding_dim, n_epochs, l_rate, edge_dropout, node_dropout, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version):
     # Step 1: Data Preparation (Assume a small dataset)
     num_users = one_hot_encoded_train.shape[0]
     num_items = one_hot_encoded_train.shape[1]
@@ -362,7 +358,6 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
     num_fet = num_cat_f + num_level_f + num_text_f
 
      #item item sequential edges
-    
 
     interaction_matrix = np.array(one_hot_encoded_train)
     adj_matrix_all = np.zeros((num_items+num_users+num_fet, num_items+num_users+num_fet))
@@ -465,8 +460,7 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
     # Step 3: Instantiate the model
     # model = LightGCN(num_users, num_items, num_fet, embedding_dim, n_layers, dropout).to(device)
     
-    model = GAT(num_users, num_items, num_fet, embedding_dim, n_layers, edge_dropout, node_dropout, heads, seed_value).to(device)
-   
+    model = LightGCN(num_users, num_items, num_fet, embedding_dim, n_layers, edge_dropout, node_dropout, seed_value).to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=l_rate)
 
@@ -476,7 +470,7 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
     for epoch in range(epochs):
         model.train()
         optimizer.zero_grad()
-        item_embeddings, user_embeddings, fet_embeddings, final_x, final_attention_weights_all_layers, final_edge_index_all_layers = model(edge_index.to(device), edge_weight.to(device)) 
+        item_embeddings, user_embeddings, fet_embeddings, final_x = model(edge_index.to(device), edge_weight.to(device)) 
         
         user_ids = torch.randint(0, num_users, (num_users,), device=device)
         pos_item_ids = []
@@ -518,9 +512,7 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
 
         #data.x = torch.cat([user_embeddings.weight.detach(), item_embeddings.weight.detach()], dim=0)
 
-    # print("from trained model, Item embeddings of 0: ", item_embeddings[0])
-    # print("from trained model, user_embeddings of last user: ", user_embeddings[num_users-1])
-    base_path = './saved_model_GAT_CDREAM_uis_text_GRU_avg_attn_layers_v3_keywords_tfidf/'
+    base_path = './saved_model_LGCN_CDREAM_uis_text_GRU_avg_attn_layers_v3_keywords_tfidf/'
     os.makedirs(base_path, exist_ok=True)
     model_filename = f"model_v{version}.pth"
     full_path = os.path.join(base_path, model_filename)
@@ -529,10 +521,7 @@ def train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_leve
     print(final_x.shape)  
     print("num of nodes: ", final_x.shape[0])
     print("num of edges: ", cnt4)
-    print("len of attention weights: ", len(final_attention_weights_all_layers))
-    print("num of edges in attention weights: ", len(final_attention_weights_all_layers[0]))
-    print("shape of edge index out: ", final_edge_index_all_layers[0].shape)
-    return model, data, final_x, final_attention_weights_all_layers, final_edge_index_all_layers, kept_word_node_to_idx
+    return model, data, final_x, kept_word_node_to_idx
 
 if __name__ == '__main__':
     train_data = pd.read_json(./train_data_all.json', orient='records', lines= True)
@@ -569,6 +558,6 @@ if __name__ == '__main__':
     version = 1
     seed_value = 42
     
-    model, data, final_x, final_attention_weights_all_layers, final_edge_index_all_layers, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_layers, embedding_dim, epochs, lr, edge_dropout, node_dropout, n_heads, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version)
+    model, data, final_x, kept_word_node_to_idx = train_model(one_hot_encoded_train, one_hot_encoded_cat, one_hot_encoded_level, adj_matrix_text, cc_seq_matrix, n_layers, embedding_dim, epochs, lr, edge_dropout, node_dropout, threshold_weight_edges_iw,  threshold_weight_edges_ww, threshold_weight_edges_cc, seed_value, version)
     end = time.time()
     print("time: ", end-start)
