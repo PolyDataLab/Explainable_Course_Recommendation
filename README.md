@@ -5,7 +5,7 @@ Description of folders:
 
 Dataset --> It consists of four datasets, including a brief description and train, validation, and test sets.
 
-KGXCR --> This folder includes all the code to implement our proposed KGXCR model. 
+Twiner --> This folder includes all the code to implement our proposed Twiner model. 
 
 Results --> We provide our experimental results on university data, MOOC datasets, and grocery data, and the configuration of hyperparameters to get the best results.
 
