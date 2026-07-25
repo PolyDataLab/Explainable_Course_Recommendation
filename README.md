@@ -1,5 +1,7 @@
 # Explainable_Course_Recommendation
-This repository contains datasets and the implementation of an explainable course recommendation model and competing approaches. 
+This repository contains datasets and the implementation of an explainable course recommendation model and competing approaches presented in the following paper: 
+
+M. A. Z. Khan, D. Luo, and A. Polyzou. "Enriching Graph-Based Modeling with Sequential Signals for Explainable Course Recommendation." In Proceedings of the 20th ACM Conference on Recommender Systems, September-October 2026.
 
 Description of folders:
 
